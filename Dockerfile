@@ -14,12 +14,18 @@ RUN python3 -m venv /isso \
  && pip3 install --no-cache-dir --upgrade pip \
  && pip3 install --no-cache-dir gunicorn cffi flask \
  && python setup.py install \
+ && pip3 install --no-cache-dir psycopg2-binary \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Third, create final repository
 FROM python:3.8-slim-buster
 WORKDIR /isso/
 COPY --from=1 /isso .
+
+# add postgres lib
+#RUN     apt-get -yqq update && \
+#        apt-get install -yq libpq5 && \
+#		rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Configuration
 VOLUME /db /config

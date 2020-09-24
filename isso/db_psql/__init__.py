@@ -9,8 +9,6 @@ from collections import defaultdict
 
 logger = logging.getLogger("isso")
 
-from isso.compat import buffer
-
 from isso.db_psql.comments import Comments
 from isso.db_psql.threads import Threads
 from isso.db_psql.spam import Guard
@@ -93,7 +91,7 @@ class PSQL:
         if self.version == 0:
 
             from isso.utils import Bloomfilter
-            bf = buffer(Bloomfilter(iterable=["127.0.0.0"]).array)
+            bf = memoryview(Bloomfilter(iterable=["127.0.0.0"]).array)
 
             with psycopg2.connect(self.path) as con:
                 con.cursor().execute('UPDATE comments SET voters=?', (bf, ))

@@ -3,7 +3,6 @@
 import time
 
 from isso.utils import Bloomfilter
-from isso.compat import buffer
 
 
 class Comments:
@@ -55,7 +54,7 @@ class Comments:
             'FROM threads WHERE threads.uri = ?;'], (
             c.get('parent'),
             c.get('created') or time.time(), None, c["mode"], c['remote_addr'],
-            c['text'], c.get('author'), c.get('email'), c.get('website'), buffer(
+            c['text'], c.get('author'), c.get('email'), c.get('website'), memoryview(
                 Bloomfilter(iterable=[c['remote_addr']]).array),
             uri)
         )
