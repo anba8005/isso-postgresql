@@ -9,7 +9,7 @@ define(function() {
         "require-author": false,
         "reply-notifications": false,
         "max-comments-top": "inf",
-        "max-comments-nested": 5,
+        "max-comments-nested": "inf",
         "reveal-on-click": 5,
         "gravatar": false,
         "avatar": true,
