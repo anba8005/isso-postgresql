@@ -51,7 +51,7 @@ require(["app/lib/ready", "app/config", "app/i18n", "app/api", "app/isso", "app/
             return;
         }
 
-        $('#isso-root').textContent = '';
+        //$('#isso-root').textContent = '';
         api.fetch(isso_thread.getAttribute("data-isso-id") || location.pathname,
             config["max-comments-top"],
             config["max-comments-nested"]).then(

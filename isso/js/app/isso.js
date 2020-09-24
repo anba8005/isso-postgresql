@@ -161,6 +161,22 @@ define(["app/dom", "app/utils", "app/config", "app/api", "app/jade", "app/i18n",
     };
 
     var insert = function(comment, scrollIntoView) {
+		var entrypoint;
+        if (comment.parent === null) {
+            entrypoint = $("#isso-root");
+        } else {
+            entrypoint = $("#isso-" + comment.parent + " > .text-wrapper > .isso-follow-up");
+		}
+
+		if (entrypoint.innerHTML.indexOf('id="isso-' + comment.id + '"') > -1) {
+			if(comment.hasOwnProperty('replies')) {
+				comment.replies.forEach(function(replyObject) {
+					insert(replyObject, false);
+				});
+			}
+			return;
+		}
+
         var el = $.htmlify(jade.render("comment", {"comment": comment}));
 
         // update datetime every 60 seconds
@@ -177,17 +193,10 @@ define(["app/dom", "app/utils", "app/config", "app/api", "app/jade", "app/i18n",
             $("div.avatar > svg", el).replace(lib.identicons.generate(comment.hash, 4, 48));
         }
 
-        var entrypoint;
-        if (comment.parent === null) {
-            entrypoint = $("#isso-root");
-        } else {
-            entrypoint = $("#isso-" + comment.parent + " > .text-wrapper > .isso-follow-up");
-        }
-
-        entrypoint.append(el);
+        entrypoint.prepend(el);
 
         if (scrollIntoView) {
-            el.scrollIntoView();
+            // el.scrollIntoView();
         }
 
         var footer = $("#isso-" + comment.id + " > .text-wrapper > .isso-comment-footer"),
