@@ -61,7 +61,8 @@ class PSQL:
             'CREATE TRIGGER remove_stale_threads',
             'AFTER DELETE ON comments',
             'EXECUTE PROCEDURE remove_stale_threads_func()'])
-
+	
+	
     @contextmanager
     def get_cursor():
         con = self.pool.getconn()
