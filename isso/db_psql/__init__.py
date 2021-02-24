@@ -28,6 +28,7 @@ class PSQL:
 
         self.path = os.path.expanduser(path)
         self.conf = conf
+		self.pool = psycopg2.pool.ThreadedConnectionPool(1,8, self.path)
 
         rv = self.execute([
             "SELECT tablename AS name FROM pg_catalog.pg_tables"
@@ -59,6 +60,15 @@ class PSQL:
             'AFTER DELETE ON comments',
             'EXECUTE PROCEDURE remove_stale_threads_func()'])
 
+	@contextmanager
+	def get_cursor():
+    	con = self.pool.getconn()
+		con.autocommit = True
+    	try:
+        	yield con.cursor()
+    	finally:
+        	self.pool.putconn(con)
+
     def execute(self, sql, args=()):
 
         if isinstance(sql, (list, tuple)):
@@ -66,8 +76,7 @@ class PSQL:
 
         sql = sql.replace('?', '%s')
 
-        with psycopg2.connect(self.path) as con:
-            cursor = con.cursor()
+        with self.get_cursor() as cursor:
             cursor.execute(sql, args)
             return cursor
 
