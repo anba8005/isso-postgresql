@@ -64,7 +64,7 @@ class PSQL:
 	
 	
     @contextmanager
-    def get_cursor():
+    def get_cursor(self):
         con = self.pool.getconn()
         con.autocommit = True
         try:
