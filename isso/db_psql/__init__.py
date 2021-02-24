@@ -7,6 +7,7 @@ import os.path
 
 from collections import defaultdict
 from contextlib import contextmanager
+from psycopg2 import pool
 
 logger = logging.getLogger("isso")
 
@@ -29,7 +30,7 @@ class PSQL:
 
         self.path = os.path.expanduser(path)
         self.conf = conf
-        self.pool = psycopg2.pool.ThreadedConnectionPool(1,8, self.path)
+        self.pool = pool.ThreadedConnectionPool(1,8, self.path)
 
         rv = self.execute([
             "SELECT tablename AS name FROM pg_catalog.pg_tables"
