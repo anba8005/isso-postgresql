@@ -6,6 +6,7 @@ import operator
 import os.path
 
 from collections import defaultdict
+from contextlib import contextmanager
 
 logger = logging.getLogger("isso")
 
@@ -60,7 +61,7 @@ class PSQL:
             'AFTER DELETE ON comments',
             'EXECUTE PROCEDURE remove_stale_threads_func()'])
 
-	@contextmanager
+    @contextmanager
     def get_cursor():
         con = self.pool.getconn()
         con.autocommit = True
